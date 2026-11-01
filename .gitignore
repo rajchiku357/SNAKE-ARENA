@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+.pnp/
+.pnp.js
+
+# Testing & Coverage
+coverage/
+
+# Production Build Output (handled by GitHub Actions or can be deployed)
+# dist/ is built automatically by GitHub Actions
+
+# Local environment & IDEs
+.env
+.env.local
+.env.*.local
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+Thumbs.db

@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Snake Arena — EAT. GROW. DOMINATE.</title>
+  <meta name="description" content="Snake Arena is an ultra-premium 2D arcade survival game. High-velocity grid movement, power surges, 8 unlockable chassis, and competitive modes." />
+  <meta name="theme-color" content="#080B0A" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Snake Arena — EAT. GROW. DOMINATE." />
+  <meta property="og:description" content="Ultra-premium 2D arcade browser game engineered with Phaser 3 and Web Audio API." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="/favicon.svg" />
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+
+  <!-- ─── Site Navigation ─── -->
+  <nav class="site-nav" aria-label="Main Navigation">
+    <div class="nav-container">
+      <a href="#hero" class="brand-wrapper">
+        <svg class="brand-svg" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="32" height="32" rx="6" fill="#151C17" stroke="#222C25"/>
+          <path d="M8 20C8 13.3726 13.3726 8 20 8H24V14H20C16.6863 14 14 16.6863 14 20V24H8V20Z" fill="#B7FF38"/>
+          <circle cx="22" cy="11" r="1.5" fill="#080B0A"/>
+        </svg>
+        <div class="brand-text">
+          <span class="brand-name">SNAKE ARENA</span>
+          <span class="brand-tagline-small">EAT. GROW. DOMINATE.</span>
+        </div>
+      </a>
+
+      <ul class="nav-menu">
+        <li><a href="#hero" class="nav-link">Play</a></li>
+        <li><a href="#modes" class="nav-link">Modes</a></li>
+        <li><a href="#armory" class="nav-link">Armory</a></li>
+        <li><a href="#rules" class="nav-link">How to Play</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <div class="status-pill" title="Current Coin Balance">
+          <svg class="coin-icon-svg" viewBox="0 0 16 16">
+            <circle cx="8" cy="8" r="7" stroke="#FFE066" stroke-width="1.5" fill="none"/>
+            <path d="M6 5.5H9.5C10.3 5.5 11 6.2 11 7C11 7.8 10.3 8.5 9.5 8.5H6V5.5ZM6 8.5H10C10.8 8.5 11.5 9.2 11.5 10C11.5 10.8 10.8 11.5 10 11.5H6V8.5Z" fill="#FFE066"/>
+          </svg>
+          <span id="nav-coins" class="tabular-nums">500</span>
+        </div>
+        <div class="status-pill" title="All-Time Record Score">
+          <span style="color: var(--color-neon-lime); font-size: 0.72rem; letter-spacing: 0.1em;">RECORD</span>
+          <span id="nav-best" class="tabular-nums" style="color: var(--color-neon-lime);">0</span>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ─── Hero Launcher & Arcade Section ─── -->
+  <header id="hero" class="hero-section">
+    <div class="hero-grid">
+      <!-- Left Column: Launcher Meta & Controls -->
+      <div class="hero-content">
+        <div class="hero-tag">
+          <span class="hero-tag-dot"></span>
+          <span>ARCADE RUN ENGINE // 60 FPS</span>
+        </div>
+
+        <h1 class="hero-title">SNAKE ARENA</h1>
+        <div class="hero-tagline">EAT. GROW. DOMINATE.</div>
+
+        <p class="hero-desc">
+          A high-performance tactical 2D arcade survival game. Navigate high-velocity grids, absorb power surges, and achieve total leaderboard dominance.
+        </p>
+
+        <!-- Launcher Configuration Panel -->
+        <div class="launcher-panel">
+          <div class="control-group-title">SELECT OPERATIONAL MODE</div>
+          <div class="selector-row" id="mode-selector">
+            <button class="select-btn active" data-mode="classic">Survival</button>
+            <button class="select-btn" data-mode="timeAttack">Time Attack</button>
+            <button class="select-btn" data-mode="zen">Zen Mode</button>
+          </div>
+
+          <div class="control-group-title">DIFFICULTY PACING</div>
+          <div class="selector-row" id="diff-selector">
+            <button class="select-btn" data-diff="beginner">Beginner</button>
+            <button class="select-btn active" data-diff="normal">Normal</button>
+            <button class="select-btn" data-diff="expert">Expert</button>
+          </div>
+
+          <div class="cta-group">
+            <button class="btn-primary-cta" id="hero-play-btn">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                <polygon points="4,2 14,8 4,14"/>
+              </svg>
+              <span>INITIALIZE RUN</span>
+            </button>
+            <a href="#armory" class="btn-secondary-cta">
+              <span>OPEN ARMORY</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Interactive Arcade Chassis -->
+      <div class="hero-arcade-wrapper">
+        <div class="arcade-chassis" id="arcade-cabinet">
+          <div class="chassis-header">
+            <span>TERMINAL // 800x600 PHASER 3</span>
+            <div style="display: flex; gap: 0.5rem;">
+              <button id="btn-fullscreen-toggle" class="select-btn" style="padding: 0.2rem 0.6rem; font-size: 0.7rem;">⛶ FULLSCREEN</button>
+              <button id="btn-sound-toggle" class="select-btn" style="padding: 0.2rem 0.6rem; font-size: 0.7rem;">🔊 AUDIO</button>
+            </div>
+          </div>
+
+          <div class="chassis-screen">
+            <div id="game-container"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ─── Horizontal Player Statistics ─── -->
+  <section class="stats-banner" aria-label="Player Statistics">
+    <div class="stats-container">
+      <div class="stat-box">
+        <div class="stat-box-label">All-Time Best</div>
+        <div class="stat-box-value lime tabular-nums" id="dash-best">0</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-box-label">Available Credits</div>
+        <div class="stat-box-value gold tabular-nums" id="dash-coins">500</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-box-label">Chassis Unlocked</div>
+        <div class="stat-box-value cyan tabular-nums" id="dash-skins">1 / 8</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-box-label">Max Length Reached</div>
+        <div class="stat-box-value tabular-nums" id="dash-length">3</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Game Modes Section ─── -->
+  <section id="modes" class="section">
+    <div class="section-inner">
+      <div class="section-head">
+        <div class="section-kicker">GAME MODES</div>
+        <h2 class="section-heading">THREE TACTICAL SCENARIOS</h2>
+        <p class="section-subheading">Choose your arena parameters. Each mode exercises unique spatial control and reflex timing.</p>
+      </div>
+
+      <div class="grid-cards-3">
+        <div class="mode-card">
+          <svg class="card-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="9"/>
+            <line x1="12" y1="3" x2="12" y2="7"/>
+            <line x1="12" y1="17" x2="12" y2="21"/>
+            <line x1="3" y1="12" x2="7" y2="12"/>
+            <line x1="17" y1="12" x2="21" y2="12"/>
+          </svg>
+          <h3 class="card-title">Classic Survival</h3>
+          <p class="card-desc">The benchmark trial. Arena walls and your own growing chassis are fatal on impact. Collect bio-pellets, chain multiplier combos, and survive as grid velocity accelerates.</p>
+          <div class="card-meta">STANDARD PERIMETER LETHALITY</div>
+        </div>
+
+        <div class="mode-card">
+          <svg class="card-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--color-cyan);">
+            <circle cx="12" cy="12" r="9"/>
+            <polyline points="12 7 12 12 15 15"/>
+          </svg>
+          <h3 class="card-title">Time Attack</h3>
+          <p class="card-desc">60 seconds on the mission clock. High-urgency sprint where every millisecond counts. Maximize power-ups, grab bonus credits, and rack up the highest possible tally.</p>
+          <div class="card-meta" style="color: var(--color-cyan);">60-SECOND VELOCITY SPRINT</div>
+        </div>
+
+        <div class="mode-card">
+          <svg class="card-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--color-purple);">
+            <path d="M18.178 8c5.096 0 5.096 8 0 8-5.095 0-7.267-8-12.356-8-5.096 0-5.096 8 0 8 5.095 0 7.267-8 12.356-8z"/>
+          </svg>
+          <h3 class="card-title">Zen Mode</h3>
+          <p class="card-desc">Perimeter wrap-around enabled. Slither cleanly through arena edges and re-emerge on the opposite flank. Pure flow-state navigation while evading self-chassis collision.</p>
+          <div class="card-meta" style="color: var(--color-purple);">INFINITE PERIMETER CONTINUITY</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Skin Armory Section ─── -->
+  <section id="armory" class="section">
+    <div class="section-inner">
+      <div class="section-head">
+        <div class="section-kicker">CHASSIS ARMORY</div>
+        <h2 class="section-heading">CUSTOM SERPENTINE COATINGS</h2>
+        <p class="section-subheading">Unlock 8 distinct procedural chassis using in-game credits earned through gameplay. Zero microtransactions.</p>
+      </div>
+
+      <div class="grid-skins-4" id="armory-grid">
+        <!-- Rendered dynamically by script to stay in sync with StorageSystem -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── How To Play Rules Matrix ─── -->
+  <section id="rules" class="section">
+    <div class="section-inner">
+      <div class="section-head">
+        <div class="section-kicker">OPERATIONAL MANUAL</div>
+        <h2 class="section-heading">SYSTEM MECHANICS &amp; COMBOS</h2>
+        <p class="section-subheading">A breakdown of food nutrition values, power-up durations, and difficulty coefficients.</p>
+      </div>
+
+      <div class="rules-matrix">
+        <div class="rule-column">
+          <h3 class="rule-col-title" style="color: var(--color-neon-lime);">Pellets &amp; Combos</h3>
+          <div class="rule-entry">
+            <span class="rule-entry-badge">01</span>
+            <div class="rule-entry-text">
+              <strong>Standard Bio-Pellet (+10 PTS)</strong>
+              Expands chassis length by 1 node and awards 1 credit.
+            </div>
+          </div>
+          <div class="rule-entry">
+            <span class="rule-entry-badge">02</span>
+            <div class="rule-entry-text">
+              <strong>Prestige Golden Pellet (+50 PTS)</strong>
+              Rare 10% spawn chance featuring an intense radiant aura and large credit yield.
+            </div>
+          </div>
+          <div class="rule-entry">
+            <span class="rule-entry-badge">03</span>
+            <div class="rule-entry-text">
+              <strong>Combo Multipliers (x2 to x8)</strong>
+              Consume consecutive pellets within 3.5s to chain score and credit multipliers.
+            </div>
+          </div>
+        </div>
+
+        <div class="rule-column">
+          <h3 class="rule-col-title" style="color: var(--color-cyan);">Power Surge Protocols</h3>
+          <div class="rule-entry">
+            <span class="rule-entry-badge">⚡</span>
+            <div class="rule-entry-text">
+              <strong>Speed Boost (5.0s)</strong>
+              Accelerates step frequency by 40% with cyan motion-blur trail.
+            </div>
+          </div>
+          <div class="rule-entry">
+            <span class="rule-entry-badge">🛡️</span>
+            <div class="rule-entry-text">
+              <strong>Hex Shield Barrier (10.0s)</strong>
+              Deploys an orbital hexagonal barrier that absorbs 1 fatal collision.
+            </div>
+          </div>
+          <div class="rule-entry">
+            <span class="rule-entry-badge">🧲</span>
+            <div class="rule-entry-text">
+              <strong>Credit Magnet (8.0s)</strong>
+              Automatically vacuums all collectible bonus coins within 3 tiles.
+            </div>
+          </div>
+        </div>
+
+        <div class="rule-column">
+          <h3 class="rule-col-title" style="color: var(--color-purple);">Pacing &amp; Multipliers</h3>
+          <div class="rule-entry">
+            <span class="rule-entry-badge">A</span>
+            <div class="rule-entry-text">
+              <strong>Beginner Tier (180ms)</strong>
+              Steady pacing for tactical practice and casual sessions.
+            </div>
+          </div>
+          <div class="rule-entry">
+            <span class="rule-entry-badge">B</span>
+            <div class="rule-entry-text">
+              <strong>Normal Tier (130ms)</strong>
+              Progressive acceleration increases velocity every 50 points scored.
+            </div>
+          </div>
+          <div class="rule-entry">
+            <span class="rule-entry-badge">C</span>
+            <div class="rule-entry-text">
+              <strong>Expert Tier (80ms)</strong>
+              High-velocity reflex trial granting 1.5x end-of-round credit multipliers.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Site Footer ─── -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <span class="brand-name">SNAKE ARENA</span>
+        <p class="footer-copy">
+          EAT. GROW. DOMINATE. An ultra-premium, production-grade 2D arcade survival engine engineered with Phaser 3, Web Audio API, and local browser persistence.
+        </p>
+      </div>
+
+      <div class="footer-nav">
+        <div class="footer-nav-col">
+          <span class="footer-nav-title">Navigation</span>
+          <a href="#hero" class="footer-nav-link">Play Terminal</a>
+          <a href="#modes" class="footer-nav-link">Game Modes</a>
+          <a href="#armory" class="footer-nav-link">Chassis Armory</a>
+          <a href="#rules" class="footer-nav-link">Operations Manual</a>
+        </div>
+
+        <div class="footer-nav-col">
+          <span class="footer-nav-title">Architecture</span>
+          <span class="footer-nav-link">Phaser 3 Hardware WebGL</span>
+          <span class="footer-nav-link">Web Audio Synthesis</span>
+          <span class="footer-nav-link">LocalStorage Vault</span>
+          <span class="footer-nav-link">Zero External Analytics</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>&copy; 2026 Snake Arena Studios. All rights reserved.</span>
+      <span>FREE STATIC ARCHITECTURE // CLOUDFLARE PAGES &amp; VERCEL READY</span>
+    </div>
+  </footer>
+
+  <!-- ─── Launcher & Armory Synchronization Script ─── -->
+  <script type="module">
+    import { StorageSystem } from '/src/game/systems/StorageSystem.js';
+    import { SKINS } from '/src/game/data/skins.js';
+    import { SoundManager } from '/src/game/audio/SoundManager.js';
+
+    let selectedMode = 'classic';
+    let selectedDiff = 'normal';
+
+    // Mode Selector Handler
+    const modeBtns = document.querySelectorAll('#mode-selector .select-btn');
+    modeBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        modeBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedMode = btn.dataset.mode;
+        SoundManager.playButtonClick();
+      });
+    });
+
+    // Difficulty Selector Handler
+    const diffBtns = document.querySelectorAll('#diff-selector .select-btn');
+    diffBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        diffBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedDiff = btn.dataset.diff;
+        StorageSystem.updateSettings({ difficulty: selectedDiff });
+        SoundManager.playButtonClick();
+      });
+    });
+
+    // Primary CTA Launch Button
+    const playBtn = document.getElementById('hero-play-btn');
+    playBtn.addEventListener('click', () => {
+      SoundManager.ensureContext();
+      if (window.snakeArena && window.snakeArena.launchGame) {
+        window.snakeArena.launchGame(selectedMode, selectedDiff);
+      }
+      const cabinet = document.getElementById('arcade-cabinet');
+      cabinet.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+
+    // Fullscreen Toggle & Frame Handling
+    const fsBtn = document.getElementById('btn-fullscreen-toggle');
+    const cabinet = document.getElementById('arcade-cabinet');
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+        if (cabinet.requestFullscreen) {
+          cabinet.requestFullscreen().catch(e => console.warn(e));
+        } else if (cabinet.webkitRequestFullscreen) {
+          cabinet.webkitRequestFullscreen();
+        } else if (cabinet.msRequestFullscreen) {
+          cabinet.msRequestFullscreen();
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen().catch(e => console.warn(e));
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) {
+          document.msExitFullscreen();
+        }
+      }
+    }
+
+    function onFullscreenChange() {
+      const isFS = !!(document.fullscreenElement || document.webkitFullscreenElement);
+      if (isFS) {
+        fsBtn.textContent = '⛶ EXIT FULLSCREEN';
+        fsBtn.classList.add('active');
+      } else {
+        fsBtn.textContent = '⛶ FULLSCREEN';
+        fsBtn.classList.remove('active');
+      }
+      if (window.snakeArena && window.snakeArena.game && window.snakeArena.game.scale) {
+        setTimeout(() => {
+          window.snakeArena.game.scale.refresh();
+        }, 120);
+      }
+    }
+
+    fsBtn.addEventListener('click', toggleFullscreen);
+    document.addEventListener('fullscreenchange', onFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', onFullscreenChange);
+
+    // Keyboard 'F' key shortcut for Fullscreen
+    window.addEventListener('keydown', (e) => {
+      if ((e.key === 'f' || e.key === 'F') && !e.ctrlKey && !e.altKey && !e.metaKey) {
+        if (document.activeElement && (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA')) return;
+        toggleFullscreen();
+      }
+    });
+
+    // Sound Toggle
+    const soundBtn = document.getElementById('btn-sound-toggle');
+    soundBtn.addEventListener('click', () => {
+      const cur = StorageSystem.getSettings().soundEnabled;
+      const next = !cur;
+      StorageSystem.updateSettings({ soundEnabled: next });
+      SoundManager.setEnabled(next);
+      soundBtn.textContent = next ? '🔊 AUDIO' : '🔇 MUTED';
+    });
+
+    // Render Armory Cards
+    function renderArmory() {
+      const container = document.getElementById('armory-grid');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const unlocked = StorageSystem.getUnlockedSkins();
+      const equipped = StorageSystem.getEquippedSkin();
+
+      SKINS.forEach(skin => {
+        const isEquipped = equipped === skin.id;
+        const isUnlocked = unlocked.includes(skin.id);
+
+        const card = document.createElement('div');
+        card.className = `skin-item-card ${isEquipped ? 'is-equipped' : ''}`;
+
+        let actionBtnHtml = '';
+        if (isEquipped) {
+          actionBtnHtml = `<button class="skin-item-action equipped-btn">EQUIPPED</button>`;
+        } else if (isUnlocked) {
+          actionBtnHtml = `<button class="skin-item-action equip-action" data-id="${skin.id}">EQUIP CHASSIS</button>`;
+        } else {
+          actionBtnHtml = `<button class="skin-item-action buy-action" data-id="${skin.id}" data-price="${skin.price}">ACQUIRE // ${skin.price} CR</button>`;
+        }
+
+        card.innerHTML = `
+          ${isEquipped ? '<span class="skin-badge-equipped">ACTIVE</span>' : ''}
+          <div class="skin-swatch-row">
+            <span class="skin-swatch-dot" style="background: ${skin.colors.head}"></span>
+            <span class="skin-swatch-dot" style="background: ${skin.colors.body}"></span>
+            <span class="skin-swatch-dot" style="background: ${skin.colors.tail}"></span>
+          </div>
+          <div class="skin-item-title">${skin.name.toUpperCase()}</div>
+          <div class="skin-item-rarity">${skin.rarity.toUpperCase()} CHASSIS</div>
+          ${actionBtnHtml}
+        `;
+
+        container.appendChild(card);
+      });
+
+      // Bind Equip Buttons
+      container.querySelectorAll('.equip-action').forEach(b => {
+        b.addEventListener('click', () => {
+          StorageSystem.equipSkin(b.dataset.id);
+          SoundManager.playButtonClick();
+          renderArmory();
+          syncDashboard();
+        });
+      });
+
+      // Bind Buy Buttons
+      container.querySelectorAll('.buy-action').forEach(b => {
+        b.addEventListener('click', () => {
+          const price = parseInt(b.dataset.price, 10);
+          if (StorageSystem.spendCoins(price)) {
+            StorageSystem.unlockSkin(b.dataset.id);
+            StorageSystem.equipSkin(b.dataset.id);
+            SoundManager.playSkinUnlock();
+            renderArmory();
+            syncDashboard();
+          } else {
+            b.textContent = 'INSUFFICIENT CREDITS';
+            b.style.color = 'var(--color-danger)';
+            setTimeout(() => {
+              b.textContent = `ACQUIRE // ${price} CR`;
+              b.style.color = '';
+            }, 1200);
+          }
+        });
+      });
+    }
+
+    // Sync Dashboard and Navigation Stats
+    function syncDashboard() {
+      const coins = StorageSystem.getCoins();
+      const best = Math.max(
+        StorageSystem.getHighScore('classic'),
+        StorageSystem.getHighScore('timeAttack'),
+        StorageSystem.getHighScore('zen')
+      );
+      const skins = StorageSystem.getUnlockedSkins().length;
+      const stats = StorageSystem.getStats();
+
+      document.getElementById('nav-coins').textContent = coins;
+      document.getElementById('nav-best').textContent = best;
+
+      document.getElementById('dash-best').textContent = best;
+      document.getElementById('dash-coins').textContent = coins;
+      document.getElementById('dash-skins').textContent = `${skins} / 8`;
+      document.getElementById('dash-length').textContent = stats.maxLength || 3;
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      StorageSystem.load();
+      syncDashboard();
+      renderArmory();
+      setInterval(syncDashboard, 1500);
+    });
+  </script>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

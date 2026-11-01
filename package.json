@@ -1,0 +1,18 @@
+{
+  "name": "snake-arena",
+  "version": "1.0.0",
+  "description": "Snake Arena — EAT. GROW. DOMINATE. An advanced 2D browser arcade snake game.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "node test-systems.js"
+  },
+  "dependencies": {
+    "phaser": "^3.80.1"
+  },
+  "devDependencies": {
+    "vite": "^5.4.2"
+  }
+}
